@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { User } = require('../config/config');
-const { comparePassword, generateAccessToken, generateRefreshToken, successResponse, errorResponse } = require('../utils/utils');
+const { comparePassword, successResponse, errorResponse } = require('../utils/utils');
+const {generateAccessToken, generateRefreshToken} = require("../middleware/auth")
 const cookie = require('cookie');
 const { Op ,where } = require('sequelize');
 

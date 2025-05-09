@@ -22,5 +22,20 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
+const generateAccessToken = (user) => {
+  return jwt.sign(
+    { id: user.id, email: user.email, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: '15m' }
+  );
+};
 
-module.exports = { authMiddleware };
+const generateRefreshToken = (user) => {
+  return jwt.sign(
+    { id: user.id, username: user.username, email: user.email },
+    process.env.REFRESH_SECRET,
+    { expiresIn: '1h' }
+  );
+};
+
+module.exports = { authMiddleware, generateAccessToken, generateRefreshToken };
