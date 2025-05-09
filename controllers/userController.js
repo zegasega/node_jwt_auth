@@ -2,8 +2,55 @@ const jwt = require('jsonwebtoken');
 const { User } = require('../config/config');
 const { comparePassword, generateAccessToken, generateRefreshToken, successResponse, errorResponse } = require('../utils/utils');
 const cookie = require('cookie');
-const { where } = require('sequelize');
+const { Op ,where } = require('sequelize');
 
+
+const getByCountryAndAge = async (req, res) => {
+  try {
+    const { age, country } = req.body;
+
+    if (!age || !country) {
+      return res.status(400).json(errorResponse(
+        'Age and country parameters are required',
+        'MISSING_PARAMS',
+        'Both age and country are required in the request body.',
+        req.originalUrl
+      ));
+    }
+
+    const users = await User.findAll({
+      where: {
+        country,
+        age: {
+          [Op.gt]: age  // age > 10 gibi kontrol
+        }
+      }
+    });
+
+    if (users.length === 0) {
+      return res.status(404).json(errorResponse(
+        'No users found',
+        'NO_USERS_FOUND',
+        `No users found from ${country} with age greater than ${age}`,
+        req.originalUrl
+      ));
+    }
+
+    return res.status(200).json(successResponse(
+      'Users fetched successfully',
+      { users },
+      req.originalUrl
+    ));
+
+  } catch (error) {
+    return res.status(500).json(errorResponse(
+      'Failed to fetch users by country and age',
+      'FETCH_ERROR',
+      error.message,
+      req.originalUrl
+    ));
+  }
+};
 
 const getByAge = async (req, res) => {
   try {
