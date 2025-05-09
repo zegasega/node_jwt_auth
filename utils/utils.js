@@ -30,7 +30,6 @@ const generateRefreshToken = (user) => {
   );
 };
 
-// Error Response Yapısı
 const errorResponse = (message, errorCode, details = null, path = null) => {
   return {
     status: 'error',
@@ -42,7 +41,6 @@ const errorResponse = (message, errorCode, details = null, path = null) => {
   };
 };
 
-// Success Response Yapısı
 const successResponse = (message, data = null, path = null) => {
   return {
     status: 'success',
