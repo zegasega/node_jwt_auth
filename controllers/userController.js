@@ -22,7 +22,7 @@ const getByCountryAndAge = async (req, res) => {
       where: {
         country,
         age: {
-          [Op.gt]: age  // age > 10 gibi kontrol
+          [Op.gt]: age  
         }
       }
     });
@@ -91,6 +91,7 @@ const getByCountry = async (req, res) => {
     return res.status(500).json(errorResponse('Error fetching users by country', 'FETCH_ERROR', error.message, req.originalUrl));
   }
 };
+
 const refreshAccessToken = async (req, res) => {
   try {
     const { refreshToken } = req.body;
@@ -153,7 +154,6 @@ const loginUser = async (req, res) => {
     res.status(500).json(errorResponse('Login failed', 'LOGIN_FAILED', err.message, req.originalUrl));
   }
 };
-
 
 const registerUser = async (req, res) => {
   try {
