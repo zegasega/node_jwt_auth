@@ -2,7 +2,48 @@ const jwt = require('jsonwebtoken');
 const { User } = require('../config/config');
 const { comparePassword, generateAccessToken, generateRefreshToken, successResponse, errorResponse } = require('../utils/utils');
 const cookie = require('cookie');
+const { where } = require('sequelize');
 
+
+const getByAge = async (req, res) => {
+  try {
+    const { age } = req.body;  
+    if (!age) {
+      return res.status(400).json(errorResponse('Age parameter is required', 'MISSING_AGE', 'The Age parameter is required in the request body.', req.originalUrl));
+    }
+
+    const users = await User.findAll({ where: { age } });
+
+    if (users.length === 0) {
+      return res.status(404).json(errorResponse('No users found for that age', 'NO_AGE_FOUND', `No users found for age: ${age}`, req.originalUrl));
+    }
+
+    return res.status(200).json(successResponse('Users found successfully', { users }, req.originalUrl));
+
+  } catch (error) {
+    return res.status(500).json(errorResponse('Error fetching users by age', 'FETCH_ERROR', error.message, req.originalUrl));
+  }
+};
+
+const getByCountry = async (req, res) => {  
+  try {
+    const { country } = req.body;
+    if (!country) {
+      return res.status(400).json(errorResponse('Country parameter is required', 'MISSING_COUNTRY', 'The country parameter is required in the request body.', req.originalUrl));
+    }
+
+    const users = await User.findAll({ where: { country } });
+
+    if (users.length === 0) {
+      return res.status(404).json(errorResponse('No users found from country', 'NO_USERS_FOUND', `No users found from country: ${country}`, req.originalUrl));
+    }
+
+    return res.status(200).json(successResponse('Users found successfully', { users }, req.originalUrl));
+
+  } catch (error) {
+    return res.status(500).json(errorResponse('Error fetching users by country', 'FETCH_ERROR', error.message, req.originalUrl));
+  }
+};
 const refreshAccessToken = async (req, res) => {
   try {
     const { refreshToken } = req.body;
@@ -152,5 +193,7 @@ module.exports = {
   deleteUser,
   registerUser,
   loginUser,
-  refreshAccessToken
+  refreshAccessToken,
+  getByCountry,
+  getByAge
 };
