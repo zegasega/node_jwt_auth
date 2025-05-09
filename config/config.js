@@ -27,7 +27,7 @@ fs.readdirSync(modelsPath)
 
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
-    db[modelName].associate(db);
+    db[modelName].associate(db); // db iliskileri burada baglaniyor | foreign keyleri etc modelin icine yaziyoruz
   }
 });
 

@@ -26,7 +26,7 @@ const userValidationSchema = Joi.object({
     }),
 
   password: Joi.string()
-    .min(8)  // Password için minimum uzunluk
+    .min(8)  
     .required()
     .messages({
       'string.base': 'Password should be a type of string',
