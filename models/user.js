@@ -11,6 +11,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       unique: true,
     },
+    age: {
+      type: DataTypes.INTEGER
+    },
+    country: {
+      type: DataTypes.STRING
+    },
     password: {
       type: DataTypes.STRING,
     },
@@ -18,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
     },
   });
+
 
   User.beforeCreate(async (user) => {
     if (user.password){

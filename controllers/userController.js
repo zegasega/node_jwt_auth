@@ -69,7 +69,7 @@ const loginUser = async (req, res) => {
 
 const registerUser = async (req, res) => {
   try {
-    const { username, email, role, password } = req.body;
+    const { username, email, age, country, role, password } = req.body;
     
     const existUser = await User.findOne({ where: { email } });
     if (existUser) {
@@ -79,6 +79,8 @@ const registerUser = async (req, res) => {
     const newUser = await User.create({
       username,
       email,
+      age,
+      country,
       role,
       password
     });

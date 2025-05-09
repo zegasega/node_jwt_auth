@@ -41,13 +41,33 @@ const userValidationSchema = Joi.object({
     .messages({
       'string.base': 'Role should be a type of string',
       'any.only': 'Role must be one of the following values: admin, user'
+    }),
+
+  // Yeni 'age' parametresini ekliyoruz
+  age: Joi.number()
+    .min(18)  // Yaşın minimum 18 olması gerekir
+    .max(100)  // Yaşın maksimum 100 olması gerekir
+    .required()
+    .messages({
+      'number.base': 'Age should be a type of number',
+      'number.min': 'Age must be at least {#limit}',
+      'number.max': 'Age must be at most {#limit}',
+      'any.required': 'Age is a required field'
+    }),
+
+  country: Joi.string()
+    .required()
+    .messages({
+      'string.base': 'Country should be a type of string',
+      'string.empty': 'Country cannot be an empty field',
+      'any.required': 'Country is a required field'
     })
 });
 
 // Validation middleware fonksiyonu
 const validateUser = (req, res, next) => {
   const { error } = userValidationSchema.validate(req.body);
-  
+
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
   }
