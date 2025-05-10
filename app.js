@@ -3,13 +3,12 @@ const app = express();
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const cors = require("cors")
+const routes = require("./routes/routes")
 
-
-const userRoutes = require("./routes/userRoutes")
 
 const limiter = rateLimit({
   windowMs: 1000, // 1 saniye
-  max: 100,       // Her IP'den saniyede en fazla 100 istek
+  max: 1000000,       // Her IP'den saniyede en fazla 100 istek
   message: {
     success: false,
     error: {
@@ -35,9 +34,7 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 
-
-app.use("/user", userRoutes)
-
+app.use('/api', routes);
 app.get('/', (req, res) => {
   res.send('API çalışıyor 🚀');
 });

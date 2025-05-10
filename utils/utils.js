@@ -13,23 +13,6 @@ const comparePassword = async (password, hashedPassword) => {
   return isMatch;
 };
 
-
-const generateAccessToken = (user) => {
-  return jwt.sign(
-    { id: user.id, email: user.email, role: user.role },
-    process.env.JWT_SECRET,
-    { expiresIn: '15m' }
-  );
-};
-
-const generateRefreshToken = (user) => {
-  return jwt.sign(
-    { id: user.id, username: user.username, email: user.email },
-    process.env.REFRESH_SECRET,
-    { expiresIn: '1h' }
-  );
-};
-
 const errorResponse = (message, errorCode, details = null, path = null) => {
   return {
     status: 'error',
@@ -54,8 +37,6 @@ const successResponse = (message, data = null, path = null) => {
 module.exports = {
   hashPassword,
   comparePassword,
-  generateAccessToken,
-  generateRefreshToken,
   successResponse,
   errorResponse,
 
