@@ -18,9 +18,21 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     status: {
-        type: DataTypes.ENUM("pending", "completed", "cancelled"),
-        defaultValue: "pending",
-        allowNull: false
+      type: DataTypes.ENUM("pending", "processing", "completed", "cancelled"),
+      defaultValue: "pending",
+      allowNull: false
+    },
+    orderDetails: {
+      type: DataTypes.JSON,
+      allowNull: false
+    },
+    paymentMethod: {
+      type: DataTypes.ENUM("card", "cash"),
+      allowNull: false
+    },
+    notes: {
+      type: DataTypes.TEXT,
+      allowNull: true
     },
     createdAt: {
       type: DataTypes.DATE,
