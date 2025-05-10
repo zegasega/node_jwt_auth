@@ -16,9 +16,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     createdBy: {
       type: DataTypes.INTEGER,
-      allowNull: false,  // customer'ı oluşturan user
+      allowNull: false, 
       references: {
-        model: "Users", // "Users" tablosuna referans
+        model: "Users", 
         key: "id"
       }
     },

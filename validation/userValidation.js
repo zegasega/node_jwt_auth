@@ -27,7 +27,7 @@ const userValidationSchema = Joi.object({
     'any.required': 'Password is required',
   }),
 
-  role: Joi.string().valid('standard', 'admin', 'manager').default('standard').messages({
+  role: Joi.string().valid('user', 'admin', 'manager').default('standard').messages({
     'string.base': 'Role should be a type of text',
     'any.only': 'Role should be one of "standard", "admin", or "manager"',
   }),
