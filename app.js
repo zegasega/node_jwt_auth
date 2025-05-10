@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const cors = require("cors")
 const routes = require("./routes/routes")
+const helmet = require('helmet');
 
 
 const limiter = rateLimit({
@@ -29,6 +30,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 
+app.use(helmet());
 app.use(limiter);
 app.use(express.json());
 app.use(morgan('dev'));

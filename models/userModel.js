@@ -1,4 +1,3 @@
-
 const {hashPassword } = require("../utils/utils")
 
 module.exports = (sequelize, DataTypes) => {
@@ -40,6 +39,8 @@ module.exports = (sequelize, DataTypes) => {
       user.password = await hashPassword(user.password);
     }
   });
+
+  User.hasMany(sequelize.models.Customer, { foreignKey: "createdBy", as: "customers" });
 
   return User;
 };

@@ -6,6 +6,15 @@ const { authMiddleware } = require("../middleware/auth");
 const { roleMiddleware } = require("../middleware/roleMiddleware");
 const valideMiddleware  = require("../middleware/validateMiddleware"); // Doğru import şekli bu olmalı
 const userValidationSchema  = require("../validation/userValidation");
+const { 
+    getAllCustomers, 
+    getCustomerById, 
+    createCustomer, 
+    updateCustomer, 
+    deleteCustomer, 
+    getCustomersByUser, 
+    searchCustomer 
+} = require('../controllers/customerController');
 
 router.post('/auth/register', valideMiddleware(userValidationSchema), registerUser);
 router.post('/auth/login', loginUser);
@@ -17,4 +26,12 @@ router.get('/users/email/:email', authMiddleware, roleMiddleware(['admin']), get
 router.put('/users/:id', authMiddleware, roleMiddleware(['admin']), updateUser);
 router.delete('/users/:id', authMiddleware, roleMiddleware(['admin']), deleteUser);
 
+
+router.get('/customers', authMiddleware, roleMiddleware(['admin', 'standard']), getAllCustomers);
+router.get('/customers/:id', authMiddleware, roleMiddleware(['admin', 'standard']), getCustomerById);
+router.post('/customers', authMiddleware, roleMiddleware(['admin']), createCustomer);
+router.put('/customers/:id', authMiddleware, roleMiddleware(['admin']), updateCustomer);
+router.delete('/customers/:id', authMiddleware, roleMiddleware(['admin']), deleteCustomer);
+router.get('/customers/user/:userId', authMiddleware, roleMiddleware(['admin', 'manager']), getCustomersByUser);
+router.get('/customers/search', authMiddleware, roleMiddleware(['admin', 'standard']), searchCustomer);
 module.exports = router;
