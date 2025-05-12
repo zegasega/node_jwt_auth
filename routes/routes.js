@@ -8,7 +8,6 @@ const { roleMiddleware } = require("../middleware/roleMiddleware");
 const valideMiddleware = require("../middleware/validateMiddleware");
 const userValidationSchema = require("../validations/userValidation");
 const customerValidationSchema = require("../validations/customerValidation");
-const orderValidationSchema =  require("../validations/orderValidation");
 const { getAllCustomers, getCustomerById, createCustomer, updateCustomer, deleteCustomer, getCustomersByUser, searchCustomer } = require('../controllers/customerController');
 
 router.post('/auth/register', valideMiddleware(userValidationSchema), registerUser);

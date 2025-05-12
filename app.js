@@ -9,7 +9,7 @@ const helmet = require('helmet');
 
 const limiter = rateLimit({
   windowMs: 1000, // 1 saniye
-  max: 1000000,       // Her IP'den saniyede en fazla 100 istek
+  max: 100,       // Her IP'den saniyede en fazla 100 istek
   message: {
     success: false,
     error: {
