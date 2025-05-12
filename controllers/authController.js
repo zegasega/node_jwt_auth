@@ -76,13 +76,6 @@ const loginUser = async (req, res) => {
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
 
-    res.cookie('refresh_token', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 30 * 24 * 60 * 60 * 1000,  // 30 days
-      sameSite: 'Strict',
-    });
-
     res.status(200).json(successResponse(
       'Login successful', 
       {
@@ -94,6 +87,7 @@ const loginUser = async (req, res) => {
           role: user.role,
         },
         accessToken,
+        refreshToken
       }, 
       req.originalUrl
     ));

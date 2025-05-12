@@ -2,12 +2,13 @@ const express = require('express');
 const router = express.Router();
 const { refreshAccessToken, loginUser, registerUser } = require('../controllers/authController');
 const { getAllUsers, getUserById, getUserByEmail, updateUser, deleteUser } = require('../controllers/userController');
-const { createProduct, getAllProducts } = require("../controllers/productController");
+const { createProduct, getAllProducts, getProductByID, deleteProduct, updateProduct } = require("../controllers/productController");
 const { authMiddleware } = require("../middleware/auth");
 const { roleMiddleware } = require("../middleware/roleMiddleware");
 const valideMiddleware = require("../middleware/validateMiddleware");
 const userValidationSchema = require("../validations/userValidation");
 const customerValidationSchema = require("../validations/customerValidation");
+const {productSchema} = require("../validations/productValidation");
 const { getAllCustomers, getCustomerById, createCustomer, updateCustomer, deleteCustomer, getCustomersByUser, searchCustomer } = require('../controllers/customerController');
 
 router.post('/auth/register', valideMiddleware(userValidationSchema), registerUser);
@@ -22,8 +23,10 @@ router.delete('/users/:id', authMiddleware, roleMiddleware(['admin']), deleteUse
 
 
 router.get('/products', authMiddleware, roleMiddleware(['admin']), getAllProducts);
-router.post('/products', authMiddleware, roleMiddleware(['admin']), createProduct);
-
+router.post('/products', authMiddleware, valideMiddleware(productSchema),roleMiddleware(['admin']), createProduct);
+router.get('/products/:id', authMiddleware,roleMiddleware(['admin']), getProductByID);
+router.delete('/products/:id', authMiddleware,roleMiddleware(['admin']), deleteProduct);
+router.put('/products/:id', authMiddleware,roleMiddleware(['admin']), updateProduct);
 
 router.get('/customers', authMiddleware, roleMiddleware(['admin']), getAllCustomers);
 router.get('/customers/:id', authMiddleware, roleMiddleware(['admin']), getCustomerById);

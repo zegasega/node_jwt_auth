@@ -1,7 +1,34 @@
 const { Product } = require("../config/config");
 const { successResponse, errorResponse } = require('../utils/utils');
 
+const getProductByID = async (req, res) => {
+    try {
+        const { id } = req.params;
 
+        const product = await Product.findByPk(id);
+        if (!product) {
+            return res.status(404).json(errorResponse(
+                'Product not found',
+                'PRODUCT_NOT_FOUND',
+                `No product found with ID ${id}`,
+                req.originalUrl
+            ));
+        }
+
+        res.status(200).json(successResponse(
+            'Product fetched successfully',
+            { product },
+            req.originalUrl
+        ));
+    } catch (error) {
+        res.status(500).json(errorResponse(
+            'Internal Server Error',
+            'SERVER_ERROR',
+            'An unexpected error occurred while retrieving the product.',
+            req.originalUrl
+        ));
+    }
+};
 
 const getAllProducts = async (req, res) => {
     try {
@@ -22,7 +49,6 @@ const getAllProducts = async (req, res) => {
         ));
     }
 };
-
 
 const createProduct = async (req, res) => {
     try {
@@ -59,7 +85,6 @@ const createProduct = async (req, res) => {
             req.originalUrl
         ));
     } catch (error) {
-        
         res.status(500).json(errorResponse(
             'Internal Server Error',
             'SERVER_ERROR',
@@ -69,7 +94,73 @@ const createProduct = async (req, res) => {
     }
 };
 
+const updateProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, price, description, stock } = req.body;
+
+        const product = await Product.findByPk(id);
+        if (!product) {
+            return res.status(404).json(errorResponse(
+                'Product not found',
+                'PRODUCT_NOT_FOUND',
+                `No product found with ID ${id}`,
+                req.originalUrl
+            ));
+        }
+
+        await product.update({ name, price, description, stock });
+
+        res.status(200).json(successResponse(
+            'Product updated successfully',
+            { product },
+            req.originalUrl
+        ));
+    } catch (error) {
+        res.status(500).json(errorResponse(
+            'Internal Server Error',
+            'UPDATE_ERROR',
+            'An unexpected error occurred while updating the product.',
+            req.originalUrl
+        ));
+    }
+};
+
+const deleteProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const product = await Product.findByPk(id);
+        if (!product) {
+            return res.status(404).json(errorResponse(
+                'Product not found',
+                'PRODUCT_NOT_FOUND',
+                `No product found with ID ${id}`,
+                req.originalUrl
+            ));
+        }
+
+        await product.destroy();
+
+        res.status(200).json(successResponse(
+            'Product deleted successfully',
+            null,
+            req.originalUrl
+        ));
+    } catch (error) {
+        res.status(500).json(errorResponse(
+            'Internal Server Error',
+            'DELETE_ERROR',
+            'An unexpected error occurred while deleting the product.',
+            req.originalUrl
+        ));
+    }
+};
+
 module.exports = {
     createProduct,
-    getAllProducts
+    getAllProducts,
+    getProductByID,
+    updateProduct,
+    deleteProduct
 };
