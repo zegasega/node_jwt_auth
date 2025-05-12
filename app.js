@@ -41,6 +41,4 @@ app.get('/', (req, res) => {
   res.send('API çalışıyor 🚀');
 });
 
-
-
 module.exports = app;
