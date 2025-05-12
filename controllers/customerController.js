@@ -65,7 +65,7 @@ const createCustomer = async (req, res) => {
             name,
             email,
             phone,
-            createdBy,  // User ID for tracking who created the customer
+            createdBy,  // User ID for tracking who created THİS CUSTOMER
         });
 
         res.status(201).json(successResponse(
