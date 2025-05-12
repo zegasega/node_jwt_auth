@@ -8,7 +8,7 @@ const PRODUCT_COUNT = 1000;
 const API_URL = 'http://localhost:3000/api/products';
 
 // Access token
-const ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJnb2tiZXJra296YWtAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzQ3MDM3MjIzLCJleHAiOjE3NDcwMzgxMjN9.hVwHFUSyQNLfgzCFFN2fSTiGxSOT-EbuYck7bfbnly8';
+const ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJnb2tiZXJra296YWtAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzQ3MDQ2MzI4LCJleHAiOjE3NDcwNDk5Mjh9.vc0xA0-RUM9VzCLSAmRHFKysVx-FNy7jk24ZY6XyeJM';
 
 // Fake ürün oluşturan fonksiyon
 const generateFakeProduct = () => ({

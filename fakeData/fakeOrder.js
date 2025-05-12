@@ -3,7 +3,7 @@ const axios = require('axios');
 
 // API URL'sini burada belirtin
 const apiUrl = 'http://localhost:3000/api/orders'; // API endpoint örneği
-const accessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJnb2tiZXJrLmtvemFrQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzQ2OTAxNDcxLCJleHAiOjE3NDY5MDIzNzF9.kvEnBgf7Yp67DugxZFcE22O8CvvN_1RY_QSuDaew9HQ'; // Access token
+const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJnb2tiZXJra296YWtAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzQ3MDQ2MzI4LCJleHAiOjE3NDcwNDk5Mjh9.vc0xA0-RUM9VzCLSAmRHFKysVx-FNy7jk24ZY6XyeJM"; // Access token
 
 async function generateFakeOrder() {
   // Sipariş verilerini oluşturma

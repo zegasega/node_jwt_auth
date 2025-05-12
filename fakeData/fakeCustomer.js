@@ -5,7 +5,7 @@ const { faker } = require("@faker-js/faker");
 const API_ENDPOINT = "http://localhost:3000/api/customers";
 
 // Token
-const ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJnb2tiZXJrLmtvemFrQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzQ2ODg4NDAzLCJleHAiOjE3NDY4ODkzMDN9.s_H6mOm1IVl5xwVSYSdT-w9kJPVFP-lQYydQ6lW1k2Y";
+const ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJnb2tiZXJra296YWtAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzQ3MDQ2MzI4LCJleHAiOjE3NDcwNDk5Mjh9.vc0xA0-RUM9VzCLSAmRHFKysVx-FNy7jk24ZY6XyeJM";
 
 // Rastgele user ID (1-179 arası)
 const getRandomUserId = () => Math.floor(Math.random() * 179) + 1;

@@ -3,6 +3,7 @@ const router = express.Router();
 const { refreshAccessToken, loginUser, registerUser } = require('../controllers/authController');
 const { getAllUsers, getUserById, getUserByEmail, updateUser, deleteUser } = require('../controllers/userController');
 const { createProduct, getAllProducts, getProductByID, deleteProduct, updateProduct } = require("../controllers/productController");
+const { createOrder, getAllOrders, getOrderById} = require("../controllers/orderController");
 const { authMiddleware } = require("../middleware/auth");
 const { roleMiddleware } = require("../middleware/roleMiddleware");
 const valideMiddleware = require("../middleware/validateMiddleware");
@@ -27,6 +28,13 @@ router.post('/products', authMiddleware, valideMiddleware(productSchema),roleMid
 router.get('/products/:id', authMiddleware,roleMiddleware(['admin']), getProductByID);
 router.delete('/products/:id', authMiddleware,roleMiddleware(['admin']), deleteProduct);
 router.put('/products/:id', authMiddleware,roleMiddleware(['admin']), updateProduct);
+
+
+router.post("/orders",authMiddleware,roleMiddleware(["admin"]), createOrder);
+router.get("/orders",authMiddleware,roleMiddleware(["admin"]), getAllOrders);
+router.get('/orders/:orderId',authMiddleware, roleMiddleware(["admin"]), getOrderById);
+
+
 
 router.get('/customers', authMiddleware, roleMiddleware(['admin']), getAllCustomers);
 router.get('/customers/:id', authMiddleware, roleMiddleware(['admin']), getCustomerById);
