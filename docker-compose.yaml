@@ -10,7 +10,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: userpassword
     ports:
-      - "3306:3306"
+      - "3306:3306" # buradaki port numarası evde 3307 olucak evde 3306 portu baska servis kullanıyor db init olurken hata veriyor err_db_connection
     volumes:
       - mariadb_data:/var/lib/mysql
     networks:
