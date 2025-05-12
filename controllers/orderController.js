@@ -2,39 +2,38 @@ const { where } = require("sequelize");
 const { Order, Product, Customer } = require("../config/config");
 const { successResponse, errorResponse } = require('../utils/utils');
 
-
 const getOrderById = async (req, res) => {
-    try {
-        const { orderId } = req.params;  
-        const order = await Order.findByPk(orderId, {
-        });
-        if (!order) {
-            return res.status(404).json({
-                status: 'error',
-                message: 'Order not found',
-                errorCode: 'order_NOT_FOUND',
-                errorMessage: `No order found with ID ${orderId}`,
-                url: req.originalUrl
-            });
-        }
+  try {
+    const { orderId } = req.params;  
+    const order = await Order.findByPk(orderId, {});
 
-        return res.status(200).json({
-            status: 'success',
-            message: 'Order retrieved successfully',
-            data: { order },
-            url: req.originalUrl
-        });
-
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            status: 'error',
-            message: 'An error occurred while fetching the order',
-            errorCode: 'order_RETRIEVAL_FAILED',
-            errorMessage: error.message,
-            url: req.originalUrl
-        });
+    if (!order) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Order not found',
+        errorCode: 'order_NOT_FOUND',
+        errorMessage: `No order found with ID ${orderId}`,
+        url: req.originalUrl
+      });
     }
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Order retrieved successfully',
+      data: { order },
+      url: req.originalUrl
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      status: 'error',
+      message: 'An error occurred while fetching the order',
+      errorCode: 'order_RETRIEVAL_FAILED',
+      errorMessage: error.message,
+      url: req.originalUrl
+    });
+  }
 };
 
 
@@ -101,8 +100,11 @@ const createOrder = async (req, res) => {
   }
 };
 
+
 const getAllOrders = async (req, res) => {
   try {
+    const { orderBy = 'id', orderDirection = 'ASC' } = req.query; 
+
     const orders = await Order.findAll({
       include: [
         {
@@ -115,6 +117,9 @@ const getAllOrders = async (req, res) => {
           as: 'product',
           attributes: ['id', 'name', 'price'],
         }
+      ],
+      order: [
+        [orderBy, orderDirection.toUpperCase()]
       ]
     });
 
@@ -144,4 +149,90 @@ const getAllOrders = async (req, res) => {
   }
 };
 
-module.exports = { createOrder, getAllOrders, getOrderById, getOrderById };
+const deleteOrderById = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    const order = await Order.findByPk(orderId);
+    if (!order) {
+      return res.status(404).json(errorResponse(
+        'Order not found',
+        'order_NOT_FOUND',
+        `No order found with ID ${orderId}`,
+        req.originalUrl
+      ));
+    }
+
+    await order.destroy();
+
+    return res.status(200).json(successResponse(
+      'Order Deleted Succesfully!',
+      req.originalUrl
+    ));
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json(errorResponse(
+      'An error occurred while deleting the order',
+      'order_DELETION_FAILED',
+      error.message,
+      req.originalUrl
+    ));
+  }
+};
+
+const updateOrderById = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { quantity, status } = req.body;
+
+    const order = await Order.findByPk(orderId);
+    if (!order) {
+      return res.status(404).json(errorResponse(
+        'Order not found',
+        'order_NOT_FOUND',
+        `No order found with ID ${orderId}`,
+        req.originalUrl
+      ));
+    }
+
+    const product = await Product.findByPk(order.productId);
+
+    if (product) {
+      const stockDifference = quantity - order.quantity;
+      if (product.stock < stockDifference) {
+        return res.status(400).json(errorResponse(
+          'Insufficient stock for this product',
+          'insufficient_stock',
+          `Only ${product.stock} units of product ${product.id} available.`,
+          req.originalUrl
+        ));
+      }
+
+      product.stock -= stockDifference;
+      await product.save();
+      order.totalPrice = product.price * quantity;
+    }
+
+    order.quantity = quantity;
+    order.status = status || order.status;  
+    await order.save();
+
+    return res.status(200).json(successResponse(
+      'Order updated successfully',
+      { order },
+      req.originalUrl
+    ));
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json(errorResponse(
+      'An error occurred while updating the order',
+      'order_UPDATE_FAILED',
+      error.message,
+      req.originalUrl
+    ));
+  }
+};
+
+module.exports = { createOrder, getAllOrders, getOrderById, deleteOrderById, updateOrderById };

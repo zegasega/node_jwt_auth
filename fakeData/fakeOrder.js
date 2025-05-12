@@ -3,13 +3,13 @@ const axios = require('axios');
 
 // API URL'sini burada belirtin
 const apiUrl = 'http://localhost:3000/api/orders'; // API endpoint örneği
-const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJnb2tiZXJra296YWtAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzQ3MDQ2MzI4LCJleHAiOjE3NDcwNDk5Mjh9.vc0xA0-RUM9VzCLSAmRHFKysVx-FNy7jk24ZY6XyeJM"; // Access token
+const accessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJnb2tiZXJra296YWtAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzQ3MDU2MzA2LCJleHAiOjE3NDcwNTk5MDZ9.EwfyiFuf2orpLNGTZhmNl38qr17r5e5SEdKUxhgu3hg"; // Access token
 
 async function generateFakeOrder() {
   // Sipariş verilerini oluşturma
   const order = {
-    customerId: faker.number.int({ min: 1, max: 100 }), // Rastgele müşteri ID'si
-    totalAmount: faker.commerce.price({ min: 10, max: 500, dec: 2 }), // 10 ile 500 arasında rastgele fiyat
+    customerId: faker.number.int({ min: 1, max: 1 }), // Rastgele müşteri ID'si
+    totalAmount: faker.commerce.price({ min: 1, max: 1, dec: 2 }), // 10 ile 500 arasında rastgele fiyat
     status: faker.helpers.arrayElement(['pending', 'processing', 'completed', 'cancelled']), // Sipariş durumu
     orderDetails: [
       {

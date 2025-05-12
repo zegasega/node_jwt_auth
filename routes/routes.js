@@ -3,7 +3,7 @@ const router = express.Router();
 const { refreshAccessToken, loginUser, registerUser } = require('../controllers/authController');
 const { getAllUsers, getUserById, getUserByEmail, updateUser, deleteUser } = require('../controllers/userController');
 const { createProduct, getAllProducts, getProductByID, deleteProduct, updateProduct } = require("../controllers/productController");
-const { createOrder, getAllOrders, getOrderById} = require("../controllers/orderController");
+const { createOrder, getAllOrders, getOrderById, deleteOrderById, updateOrderById} = require("../controllers/orderController");
 const { authMiddleware } = require("../middleware/auth");
 const { roleMiddleware } = require("../middleware/roleMiddleware");
 const valideMiddleware = require("../middleware/validateMiddleware");
@@ -22,18 +22,17 @@ router.get('/users/email/:email', authMiddleware, roleMiddleware(['admin']), get
 router.put('/users/:id', authMiddleware, roleMiddleware(['admin']), updateUser);
 router.delete('/users/:id', authMiddleware, roleMiddleware(['admin']), deleteUser);
 
-
 router.get('/products', authMiddleware, roleMiddleware(['admin']), getAllProducts);
 router.post('/products', authMiddleware, valideMiddleware(productSchema),roleMiddleware(['admin']), createProduct);
 router.get('/products/:id', authMiddleware,roleMiddleware(['admin']), getProductByID);
 router.delete('/products/:id', authMiddleware,roleMiddleware(['admin']), deleteProduct);
 router.put('/products/:id', authMiddleware,roleMiddleware(['admin']), updateProduct);
 
-
 router.post("/orders",authMiddleware,roleMiddleware(["admin"]), createOrder);
 router.get("/orders",authMiddleware,roleMiddleware(["admin"]), getAllOrders);
 router.get('/orders/:orderId',authMiddleware, roleMiddleware(["admin"]), getOrderById);
-
+router.delete('/orders/:orderId',authMiddleware, roleMiddleware(["admin"]), deleteOrderById);
+router.put('/orders/:orderId',authMiddleware, roleMiddleware(["admin"]), updateOrderById);
 
 
 router.get('/customers', authMiddleware, roleMiddleware(['admin']), getAllCustomers);
