@@ -10,7 +10,7 @@ const valideMiddleware = require("../middleware/validateMiddleware");
 const userValidationSchema = require("../validations/userValidation");
 const customerValidationSchema = require("../validations/customerValidation");
 const {productSchema} = require("../validations/productValidation");
-const { getAllCustomers, getCustomerById, createCustomer, updateCustomer, deleteCustomer, getCustomersByUser, searchCustomer, getCustomerOrders } = require('../controllers/customerController');
+const { getAllCustomers, getCustomerById, createCustomer, updateCustomer, deleteCustomer, getCustomersByUser, searchCustomer, getCustomerOrders, getCustomerDebtById } = require('../controllers/customerController');
 
 router.post('/auth/register', valideMiddleware(userValidationSchema), registerUser);
 router.post('/auth/login', loginUser);
@@ -34,6 +34,8 @@ router.get('/orders/:orderId',authMiddleware, roleMiddleware(["admin"]), getOrde
 router.delete('/orders/:orderId',authMiddleware, roleMiddleware(["admin"]), deleteOrderById);
 router.put('/orders/:orderId',authMiddleware, roleMiddleware(["admin"]), updateOrderById);
 
+
+router.get("/customers/debt/:id", authMiddleware, roleMiddleware(["admin"]), getCustomerDebtById);
 router.get("/customers/orders/:id", authMiddleware, roleMiddleware(["admin"]), getCustomerOrders);
 router.get('/customers/user/:userId', authMiddleware, roleMiddleware(['admin']), getCustomersByUser);
 router.get('/customers/search', authMiddleware, roleMiddleware(['admin', 'standard']), searchCustomer);

@@ -1,5 +1,62 @@
-const { Customer, Product, Order} = require('../config/config');
+const { Customer, Product, Order, sequelize } = require('../config/config');
 const { successResponse, errorResponse } = require('../utils/utils');
+
+
+const getCustomerDebtById = async (req, res) => {
+  const customerId = req.params.id;
+
+  try {
+    const result = await Order.findAll({
+      where: { customerId },
+      attributes: [
+        [sequelize.col('customer.id'), 'id'],
+        [sequelize.col('customer.name'), 'name'],
+        [sequelize.col('customer.email'), 'email'],
+        [sequelize.fn('ROUND', sequelize.fn('SUM', sequelize.literal('quantity * product.price'))), 'total_debt']
+      ],
+      include: [
+        {
+          model: Customer,
+          as: 'customer',
+          attributes: []
+        },
+        {
+          model: Product,
+          as: 'product',
+          attributes: []
+        }
+      ],
+      group: ['customer.id', 'customer.name', 'customer.email'],
+      raw: true
+    });
+
+    if (!result.length) {
+      return res.status(404).json(errorResponse(
+        'No orders found for this customer',
+        'customer_DEBT_NOT_FOUND',
+        'This customer has no orders.',
+        req.originalUrl
+      ));
+    }
+
+    res.status(200).json(successResponse(
+      'Customer debt retrieved successfully',
+      { debt: result[0] },
+      req.originalUrl
+    ));
+
+  } catch (error) {
+    console.error('Error fetching customer debt:', error);
+    res.status(500).json(errorResponse(
+      'Error retrieving customer debt',
+      'customer_DEBT_ERROR',
+      error.message,
+      req.originalUrl
+    ));
+  }
+};
+
+
 
 
 const getCustomerOrders = async (req, res) => {
@@ -286,5 +343,6 @@ module.exports = {
     deleteCustomer,
     getCustomersByUser,
     searchCustomer,
-    getCustomerOrders
+    getCustomerOrders,
+    getCustomerDebtById,
 };
