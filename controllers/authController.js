@@ -53,7 +53,7 @@ const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ where: { email } }); // User modelinde email'e göre arama yapıyoruz
+    const user = await User.findOne({ where: { email } }); 
     if (!user) {
       return res.status(400).json(errorResponse(
         'Invalid email or password', 
@@ -63,7 +63,7 @@ const loginUser = async (req, res) => {
       ));
     }
 
-    const isPasswordValid = await comparePassword(password, user.password); // Şifre doğrulama
+    const isPasswordValid = await comparePassword(password, user.password);
     if (!isPasswordValid) {
       return res.status(400).json(errorResponse(
         'Invalid email or password', 
@@ -81,7 +81,7 @@ const loginUser = async (req, res) => {
       {
         user: {
           id: user.id,
-          firstName: user.firstName,  // Kullanıcı bilgileri
+          firstName: user.firstName,  
           lastName: user.lastName,
           email: user.email,
           role: user.role,
