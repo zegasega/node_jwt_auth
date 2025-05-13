@@ -53,22 +53,12 @@ const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ where: { email } }); 
-    if (!user) {
+    const user = await User.findOne({ where: { email } });
+    if (!user || !(await comparePassword(password, user.password))) {
       return res.status(400).json(errorResponse(
-        'Invalid email or password', 
-        'INVALID_CREDENTIALS', 
-        'No user found with the provided email.', 
-        req.originalUrl
-      ));
-    }
-
-    const isPasswordValid = await comparePassword(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(400).json(errorResponse(
-        'Invalid email or password', 
-        'INVALID_CREDENTIALS', 
-        'The password provided does not match our records.', 
+        'Invalid email or password',
+        'INVALID_CREDENTIALS',
+        'Authentication failed with provided credentials.',
         req.originalUrl
       ));
     }
@@ -77,30 +67,30 @@ const loginUser = async (req, res) => {
     const refreshToken = generateRefreshToken(user);
 
     res.status(200).json(successResponse(
-      'Login successful', 
+      'Login successful',
       {
         user: {
           id: user.id,
-          firstName: user.firstName,  
+          firstName: user.firstName,
           lastName: user.lastName,
           email: user.email,
           role: user.role,
         },
         accessToken,
         refreshToken
-      }, 
+      },
       req.originalUrl
     ));
-
   } catch (err) {
     res.status(500).json(errorResponse(
-      'Login failed', 
-      'LOGIN_FAILED', 
-      err.message, 
+      'Login failed',
+      'LOGIN_FAILED',
+      err.message,
       req.originalUrl
     ));
   }
 };
+
 
 const registerUser = async (req, res) => {
   try {

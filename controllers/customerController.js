@@ -61,13 +61,13 @@ const getCustomerDebtById = async (req, res) => {
 
 const getCustomerOrders = async (req, res) => {
   const custID = req.params.id;
-  const { status } = req.query; // status'u query parametrelerinden al
+  const { status } = req.query; 
 
   try {
     const whereClause = { customerId: custID };
 
     if (status) {
-      whereClause.status = status; // status varsa filtrele
+      whereClause.status = status; 
     }
 
     const orders = await Order.findAll({

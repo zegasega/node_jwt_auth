@@ -26,11 +26,14 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
+const accessTokenExpiresIn = 12 * 60 * 60; // 12 saat (saniye cinsinden)
+const refreshTokenExpiresIn = 7 * 24 * 60 * 60; // 7 gün
+
 const generateAccessToken = (user) => {
   return jwt.sign(
     { id: user.id, email: user.email, role: user.role },
     process.env.JWT_SECRET,
-    { expiresIn: '1h' }
+    { expiresIn: accessTokenExpiresIn }
   );
 };
 
@@ -38,7 +41,7 @@ const generateRefreshToken = (user) => {
   return jwt.sign(
     { id: user.id, email: user.email },
     process.env.REFRESH_SECRET,
-    { expiresIn: '7d' }
+    { expiresIn: refreshTokenExpiresIn }
   );
 };
 

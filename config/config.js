@@ -12,11 +12,12 @@ const sequelize = new Sequelize(
     port: process.env.DB_PORT,
     dialect: 'mariadb',
     logging: false,
-  }
+  },
+  
 );
 
 const db = {};
-const modelsPath = path.join(__dirname, '../models'); // modeller neredeyse orada
+const modelsPath = path.join(__dirname, '../models'); // modeller neredeyse oradaki dosyanın pathi
 
 fs.readdirSync(modelsPath)
   .filter((file) => file.endsWith('.js'))
