@@ -61,21 +61,26 @@ const getCustomerDebtById = async (req, res) => {
 
 const getCustomerOrders = async (req, res) => {
   const custID = req.params.id;
+  const { status } = req.query; // status'u query parametrelerinden al
 
   try {
+    const whereClause = { customerId: custID };
+
+    if (status) {
+      whereClause.status = status; // status varsa filtrele
+    }
+
     const orders = await Order.findAll({
-      where: {
-        customerId: custID
-      },
+      where: whereClause,
       include: [
         {
           model: Customer,
-          as: 'customer', 
+          as: 'customer',
           attributes: ['id', 'name', 'email']
         },
         {
           model: Product,
-          as: 'product', 
+          as: 'product',
           attributes: ['name', 'price']
         }
       ],
@@ -86,7 +91,7 @@ const getCustomerOrders = async (req, res) => {
       return res.status(404).json(errorResponse(
         'No orders found for this customer',
         'orders_NOT_FOUND',
-        'There are no orders in the database for this customer.',
+        'There are no orders matching your criteria.',
         req.originalUrl
       ));
     }
@@ -112,9 +117,9 @@ const getCustomerOrders = async (req, res) => {
       { orders: result },
       req.originalUrl
     ));
-    
+
   } catch (err) {
-    console.error('Error fetching user orders:', err);
+    console.error('Error fetching customer orders:', err);
     res.status(500).json(errorResponse(
       'Error retrieving customer orders',
       'orders_RETRIEVAL_FAILED',
@@ -123,6 +128,7 @@ const getCustomerOrders = async (req, res) => {
     ));
   }
 };
+
 
 const getAllCustomers = async (req, res) => {
     try {

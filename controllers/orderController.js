@@ -39,7 +39,7 @@ const getOrderById = async (req, res) => {
 
 const createOrder = async (req, res) => {
   try {
-    const { customerId, productId, quantity } = req.body;
+    const { customerId, productId, quantity, status } = req.body;
 
     const customer = await Customer.findByPk(customerId);
     if (!customer) {
@@ -77,7 +77,7 @@ const createOrder = async (req, res) => {
       productId,
       quantity,
       totalPrice,
-      status: 'pending',
+      status,
     });
 
     product.stock -= quantity;
