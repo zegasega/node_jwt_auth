@@ -1,5 +1,53 @@
-const { Customer } = require('../config/config');
+const { Customer, Product, Order} = require('../config/config');
 const { successResponse, errorResponse } = require('../utils/utils');
+
+
+const getCustomerOrders = async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const orders = await Order.findAll({
+      where: {
+        customerId: userId
+      },
+      include: [
+        {
+          model: Customer,
+          as: 'customer', 
+          attributes: ['id', 'name', 'email']
+        },
+        {
+          model: Product,
+          as: 'product', 
+          attributes: ['name', 'price']
+        }
+      ],
+      order: [['createdAt', 'ASC']]
+    });
+
+    const result = orders.map(order => {
+      const totalPrice = Math.round(order.quantity * order.product.price); 
+
+      return {
+        customer_id: order.customer.id, // Alias'ı kullanarak erişim
+        customer_name: order.customer.name,
+        email: order.customer.email,
+        product_name: order.product.name, // Alias'ı kullanarak erişim
+        quantity: order.quantity,
+        price: order.product.price, // Alias'ı kullanarak erişim
+        total_price: totalPrice,
+        status: order.status,
+        orderDate: order.orderDate
+      };
+    });
+
+    res.status(200).json(result);
+  } catch (err) {
+    console.error('Error fetching user orders:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 
 const getAllCustomers = async (req, res) => {
     try {
@@ -219,5 +267,6 @@ module.exports = {
     updateCustomer,
     deleteCustomer,
     getCustomersByUser,
-    searchCustomer
+    searchCustomer,
+    getCustomerOrders
 };
