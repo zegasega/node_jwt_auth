@@ -35,18 +35,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 'pending'
     }
-  }, {
-    virtuals: {
-      totalPrice: {
-        type: DataTypes.FLOAT,
-        get() {
-          const quantity = this.getDataValue('quantity');
-          const product = this.getDataValue('product'); // Get associated product
-          return quantity * (product ? product.price : 0);
-        }
-      }
-    }
-  });
+  }, 
+  );
 
   Order.associate = (models) => {
     Order.belongsTo(models.Customer, {

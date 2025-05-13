@@ -3,12 +3,12 @@ const { successResponse, errorResponse } = require('../utils/utils');
 
 
 const getCustomerOrders = async (req, res) => {
-  const userId = req.params.id;
+  const custID = req.params.id;
 
   try {
     const orders = await Order.findAll({
       where: {
-        customerId: userId
+        customerId: custID
       },
       include: [
         {
@@ -25,29 +25,47 @@ const getCustomerOrders = async (req, res) => {
       order: [['createdAt', 'ASC']]
     });
 
+    if (orders.length === 0) {
+      return res.status(404).json(errorResponse(
+        'No orders found for this customer',
+        'orders_NOT_FOUND',
+        'There are no orders in the database for this customer.',
+        req.originalUrl
+      ));
+    }
+
     const result = orders.map(order => {
-      const totalPrice = Math.round(order.quantity * order.product.price); 
+      const totalPrice = Math.round(order.quantity * order.product.price);
 
       return {
-        customer_id: order.customer.id, // Alias'ı kullanarak erişim
+        customer_id: order.customer.id,
         customer_name: order.customer.name,
         email: order.customer.email,
-        product_name: order.product.name, // Alias'ı kullanarak erişim
+        product_name: order.product.name,
         quantity: order.quantity,
-        price: order.product.price, // Alias'ı kullanarak erişim
+        price: order.product.price,
         total_price: totalPrice,
         status: order.status,
         orderDate: order.orderDate
       };
     });
 
-    res.status(200).json(result);
+    res.status(200).json(successResponse(
+      'Customer orders retrieved successfully',
+      { orders: result },
+      req.originalUrl
+    ));
+    
   } catch (err) {
     console.error('Error fetching user orders:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json(errorResponse(
+      'Error retrieving customer orders',
+      'orders_RETRIEVAL_FAILED',
+      err.message,
+      req.originalUrl
+    ));
   }
 };
-
 
 const getAllCustomers = async (req, res) => {
     try {
@@ -113,7 +131,7 @@ const createCustomer = async (req, res) => {
             name,
             email,
             phone,
-            createdBy,  // User ID for tracking who created THİS CUSTOMER
+            createdBy,  
         });
 
         res.status(201).json(successResponse(
