@@ -4,6 +4,34 @@ const { comparePassword, successResponse, errorResponse } = require('../utils/ut
 const {generateAccessToken, generateRefreshToken} = require("../middleware/auth")
 const cookie = require('cookie');
 const { Op ,where } = require('sequelize');
+const sendVerificationEmail = require("../services/emailService/sendTestMail");
+
+
+const resetPassword = async (req, res) => {
+  try {
+    
+    const { userID } = req .body;
+
+    const user = await User.findByPk(userID);
+    if (!user) return res.status(400).json(errorResponse(
+        'User Not Found', 
+        'USER_NOT_FOUND_BY_ID', 
+        'INVALID USER ID.', 
+        req.originalUrl
+      ));
+    await sendVerificationEmail(user.email, user.firstName)
+
+  } catch (error) {
+    return res.status(400).json(errorResponse(
+        'User not found', 
+        'USER_NOT_FOUND', 
+        '', 
+        req.originalUrl
+      ));
+    
+  }
+}
+
 
 
 const refreshAccessToken = async (req, res) => {

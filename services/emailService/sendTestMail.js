@@ -137,4 +137,4 @@ async function sendTestEmail(to, userName) {
     }
 }
 
-module.exports = { sendTestEmail };  
+module.exports = { sendTestEmail, sendVerificationEmail };  
