@@ -20,10 +20,10 @@ const limiter = rateLimit({
 });
 
 const corsOptions = {
-  origin: ['http://localhost:3000'], // Sadece bu origin'lerden gelen isteklere izin ver
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Hangi HTTP metodlarına izin verileceği
+  origin: ['http://localhost:3000'],                 // Sadece bu origin'lerden gelen isteklere izin ver
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],         // Hangi HTTP metodlarına izin verileceği
   allowedHeaders: ['Content-Type', 'Authorization'], // Hangi header'lara izin verileceği
-  credentials: true, // Tarayıcıdan gelen cookie, authorization header vb. bilgiler iletmeye izin verir
+  credentials: true,                                 // Tarayıcıdan gelen cookie, authorization header vb. bilgiler iletmeye izin verir
   optionsSuccessStatus: 200 
 };
 
@@ -35,6 +35,10 @@ app.use(limiter);
 app.use(express.json());
 app.use(morgan('dev'));
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swaggerConfig'); 
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use('/api', routes);
 app.get('/', (req, res) => {
