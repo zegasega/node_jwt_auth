@@ -6,31 +6,47 @@ const cookie = require('cookie');
 const { Op ,where } = require('sequelize');
 const sendVerificationEmail = require("../services/emailService/sendTestMail");
 
-
 const resetPassword = async (req, res) => {
   try {
-    
-    const { userID } = req .body;
+    const { userID } = req.body;
+
+    if (!userID) {
+      return res.status(400).json(errorResponse(
+        'Missing user ID',
+        'MISSING_USER_ID',
+        'The user ID is required in the request body.',
+        req.originalUrl
+      ));
+    }
 
     const user = await User.findByPk(userID);
-    if (!user) return res.status(400).json(errorResponse(
-        'User Not Found', 
-        'USER_NOT_FOUND_BY_ID', 
-        'INVALID USER ID.', 
+
+    if (!user) {
+      return res.status(404).json(errorResponse(
+        'User not found',
+        'USER_NOT_FOUND',
+        'No user exists with the given ID.',
         req.originalUrl
       ));
-    await sendVerificationEmail(user.email, user.firstName)
+    }
+
+    const verificationCode = await sendVerificationEmail(user.email, user.firstName);
+
+    return res.status(200).json(successResponse(
+      'Verification code sent to user email',
+      { email: user.email, code: verificationCode },
+      req.originalUrl
+    ));
 
   } catch (error) {
-    return res.status(400).json(errorResponse(
-        'User not found', 
-        'USER_NOT_FOUND', 
-        '', 
-        req.originalUrl
-      ));
-    
+    return res.status(500).json(errorResponse(
+      'Server error while resetting password',
+      'RESET_PASSWORD_ERROR',
+      error.message,
+      req.originalUrl
+    ));
   }
-}
+};
 
 
 
@@ -168,4 +184,4 @@ const registerUser = async (req, res) => {
 };
 
 
-module.exports = { refreshAccessToken, loginUser, registerUser };
+module.exports = { refreshAccessToken, loginUser, registerUser, resetPassword };

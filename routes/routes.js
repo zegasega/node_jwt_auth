@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { refreshAccessToken, loginUser, registerUser } = require('../controllers/authController');
+const { refreshAccessToken, loginUser, registerUser, resetPassword } = require('../controllers/authController');
 const { getAllUsers, getUserById, getUserByEmail, updateUser, deleteUser } = require('../controllers/userController');
 const { createProduct, getAllProducts, getProductByID, deleteProduct, updateProduct } = require("../controllers/productController");
 const { createOrder, getAllOrders, getOrderById, deleteOrderById, updateOrderById} = require("../controllers/orderController");
@@ -12,43 +12,13 @@ const customerValidationSchema = require("../validations/customerValidation");
 const {productSchema} = require("../validations/productValidation");
 const { getAllCustomers, getCustomerById, createCustomer, updateCustomer, deleteCustomer, getCustomersByUser, searchCustomer, getCustomerOrders, getCustomerDebtById } = require('../controllers/customerController');
 
-/**
- * @swagger
- * /auth/register:
- *   post:
- *     summary: Register a new user
- *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               firstName:
- *                 type: string
- *               lastName:
- *                 type: string
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *               role:
- *                 type: string
- *                 enum: [admin, standard]
- *     responses:
- *       201:
- *         description: User created successfully
- *       400:
- *         description: Email already exists
- */
 
 
 
 router.post('/auth/register', valideMiddleware(userValidationSchema), registerUser);
-
 router.post('/auth/login', loginUser);
 router.post('/auth/refresh-token', refreshAccessToken);
+router.post("/auth/reset-password", resetPassword) 
 
 router.get('/users', authMiddleware, roleMiddleware(['admin', 'standard']), getAllUsers);
 router.get('/users/:id', authMiddleware, roleMiddleware(['admin']), getUserById);

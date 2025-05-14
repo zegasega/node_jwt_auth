@@ -81,7 +81,6 @@ const welcomeHtmlTemplate = `
 </html>
 `;
 
-
 const randomNumber = () => {
     return Math.floor(1000 + Math.random() * 9000); 
 };
@@ -116,8 +115,6 @@ async function sendVerificationEmail(to, userName) {
         throw err;
     }
 }
-
-
 
 async function sendTestEmail(to, userName) {
     try {
