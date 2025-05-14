@@ -42,6 +42,9 @@ const { getAllCustomers, getCustomerById, createCustomer, updateCustomer, delete
  *       400:
  *         description: Email already exists
  */
+
+
+
 router.post('/auth/register', valideMiddleware(userValidationSchema), registerUser);
 
 router.post('/auth/login', loginUser);

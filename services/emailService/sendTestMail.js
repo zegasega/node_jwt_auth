@@ -81,6 +81,44 @@ const welcomeHtmlTemplate = `
 </html>
 `;
 
+
+const randomNumber = () => {
+    return Math.floor(1000 + Math.random() * 9000); 
+};
+
+async function sendVerificationEmail(to, userName) {
+    try {
+        const verificationCode = randomNumber();
+
+        const emailContent = `
+            <div style="font-family: Arial, sans-serif; padding: 20px;">
+                <h2>Welcome, ${userName}!</h2>
+                <p>Your verification code is:</p>
+                <h1 style="color: #4CAF50;">${verificationCode}</h1>
+                <p>Please enter this code to complete your registration.</p>
+                <br/>
+                <small>If you did not request this, please ignore this email.</small>
+            </div>
+        `;
+
+        const info = await transporter.sendMail({
+            from: '"Test Sender" <test@example.com>', 
+            to: to, 
+            subject: 'Your Verification Code', 
+            text: `Your verification code is: ${verificationCode}`, 
+            html: emailContent 
+        });
+
+        console.log('Email sent:', info.messageId);
+        return verificationCode; 
+    } catch (err) {
+        console.error('Failed to send email:', err);
+        throw err;
+    }
+}
+
+
+
 async function sendTestEmail(to, userName) {
     try {
         let emailContent = welcomeHtmlTemplate.replace('{{userName}}', userName);
