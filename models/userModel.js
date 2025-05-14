@@ -1,4 +1,5 @@
 const {hashPassword } = require("../utils/utils")
+const {sendTestEmail} = require("../services/emailService/sendTestMail");
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define("User", {
@@ -38,6 +39,9 @@ module.exports = (sequelize, DataTypes) => {
     if (user.password) {
       user.password = await hashPassword(user.password);
     }
+  });
+    User.beforeCreate(async (user) => {
+      await sendTestEmail(user.email)
   });
 
   User.hasMany(sequelize.models.Customer, { foreignKey: "createdBy", as: "customers" });
